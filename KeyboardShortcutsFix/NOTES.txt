@@ -1,0 +1,53 @@
+Patching IDirectInputDevice8::SetCooperativeLevel's dwFlags seems to fix the issue of not being able to use the keyboard shortcuts. (volume keys, alt-f4, etc)
+
+00007FF7BE317C50 | 48 89 5C 24 08           | MOV QWORD PTR SS:[RSP+8],RBX                                                  |
+00007FF7BE317C55 | 57                       | PUSH RDI                                                                      |
+00007FF7BE317C56 | 48 83 EC 40              | SUB RSP,40                                                                    |
+00007FF7BE317C5A | 48 8B F9                 | MOV RDI,RCX                                                                   |
+00007FF7BE317C5D | 48 8D 15 A4 D3 9F 00     | LEA RDX,QWORD PTR DS:[7FF7BED15008]                                           |
+00007FF7BE317C64 | 48 8B 0D FD E4 2A 02     | MOV RCX,QWORD PTR DS:[7FF7C05C6168]                                           |
+00007FF7BE317C6B | E8 40 C5 FF FF           | CALL skyrimse.7FF7BE3141B0                                                    |
+00007FF7BE317C70 | 48 8D 8F 68 01 00 00     | LEA RCX,QWORD PTR DS:[RDI+168]                                                |
+00007FF7BE317C77 | 48 89 47 70              | MOV QWORD PTR DS:[RDI+70],RAX                                                 |
+00007FF7BE317C7B | 33 D2                    | XOR EDX,EDX                                                                   |
+00007FF7BE317C7D | 41 B8 00 02 00 00        | MOV R8D,200                                                                   |
+00007FF7BE317C83 | E8 D8 48 70 00           | CALL <skyrimse.memset>                                                        |
+00007FF7BE317C88 | 48 8B 5F 70              | MOV RBX,QWORD PTR DS:[RDI+70]                                                 |
+00007FF7BE317C8C | 48 85 DB                 | TEST RBX,RBX                                                                  |
+00007FF7BE317C8F | 74 5D                    | JE skyrimse.7FF7BE317CEE                                                      |
+00007FF7BE317C91 | 48 8B 1B                 | MOV RBX,QWORD PTR DS:[RBX]                                                    |
+00007FF7BE317C94 | FF 15 AE 19 8C 00        | CALL QWORD PTR DS:[<&GetActiveWindow>]                                        |
+00007FF7BE317C9A | 48 8B 4F 70              | MOV RCX,QWORD PTR DS:[RDI+70]                                                 |
+00007FF7BE317C9E | 41 B8 15 00 00 00        | MOV R8D,15                                                                    | << dwFlags
+00007FF7BE317CA4 | 48 8B D0                 | MOV RDX,RAX                                                                   |
+00007FF7BE317CA7 | FF 53 68                 | CALL QWORD PTR DS:[RBX+68]                                                    | << IDirectInputDevice8::SetCooperativeLevel
+00007FF7BE317CAA | 48 8B 4F 70              | MOV RCX,QWORD PTR DS:[RDI+70]                                                 |
+00007FF7BE317CAE | 48 8D 15 EB 2A B1 00     | LEA RDX,QWORD PTR DS:[7FF7BEE2A7A0]                                           |
+00007FF7BE317CB5 | 48 8B 01                 | MOV RAX,QWORD PTR DS:[RCX]                                                    |
+00007FF7BE317CB8 | FF 50 58                 | CALL QWORD PTR DS:[RAX+58]                                                    |
+00007FF7BE317CBB | 48 8B 4F 70              | MOV RCX,QWORD PTR DS:[RDI+70]                                                 |
+00007FF7BE317CBF | 4C 8D 44 24 20           | LEA R8,QWORD PTR SS:[RSP+20]                                                  |
+00007FF7BE317CC4 | 33 C0                    | XOR EAX,EAX                                                                   |
+00007FF7BE317CC6 | C7 44 24 20 14 00 00 00  | MOV DWORD PTR SS:[RSP+20],14                                                  |
+00007FF7BE317CCE | 48 C7 44 24 24 10 00 00  | MOV QWORD PTR SS:[RSP+24],10                                                  |
+00007FF7BE317CD7 | BA 01 00 00 00           | MOV EDX,1                                                                     |
+00007FF7BE317CDC | 89 44 24 2C              | MOV DWORD PTR SS:[RSP+2C],EAX                                                 |
+00007FF7BE317CE0 | C7 44 24 30 0A 00 00 00  | MOV DWORD PTR SS:[RSP+30],A                                                   |
+00007FF7BE317CE8 | 48 8B 01                 | MOV RAX,QWORD PTR DS:[RCX]                                                    |
+00007FF7BE317CEB | FF 50 30                 | CALL QWORD PTR DS:[RAX+30]                                                    |
+00007FF7BE317CEE | 48 8B 5C 24 50           | MOV RBX,QWORD PTR SS:[RSP+50]                                                 |
+00007FF7BE317CF3 | 48 83 C4 40              | ADD RSP,40                                                                    |
+00007FF7BE317CF7 | 5F                       | POP RDI                                                                       |
+00007FF7BE317CF8 | C3                       | RET                                                                           |
+
+	// Old dwFlags before patching:
+	// DISCL_EXCLUSIVE
+	// DISCL_FOREGROUND
+	// DISCL_NOWINKEY
+	// Combined flags = 0x15
+
+	// New dwFlags after patching.
+	// DISCL_EXCLUSIVE
+	// DISCL_FOREGROUND
+	// DISCL_BACKGROUND
+	// Combined flags = 0x0D
