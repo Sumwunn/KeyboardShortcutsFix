@@ -42,7 +42,7 @@ extern "C" __declspec(dllexport) int Setup() {
 	// These bytes will land us exactly at where IDirectInputDevice8::SetCooperativeLevel's dwFlags is.
 	unsigned char BytesToFind01[] = { 0x41, 0xB8, 0x15, 0x00, 0x00, 0x00, 0x48, 0x8B, 0xD0, 0xFF, 0x53, 0x68 };
 	// This is what we patch it with (check notes.txt).
-	unsigned char BytesPatch01[] = { 0x41, 0xB8, 0x0D };
+	unsigned char BytesPatch01[] = { 0x48, 0x31, 0xD2 };
 
 	// Pointers.
 	unsigned char *BytesToFind = NULL;
@@ -58,7 +58,7 @@ extern "C" __declspec(dllexport) int Setup() {
 	void* PatchAddress = (void*)NULL;
 	// We need to go back X bytes so we land at the right address.
 	int PatchAddressModifier = NULL;
-	int PatchAddressModifier01 = 0; // Skyrim SE.
+	int PatchAddressModifier01 = 0x6; // Skyrim SE.
 
 	// Misc.
 	DWORD OldVP = NULL;
@@ -89,7 +89,7 @@ extern "C" __declspec(dllexport) int Setup() {
 	SearchAddress = GetTextSectionAddr(TargetModule, 2);
 
 	// Get address and patch it.
-	PatchAddress = BinSearch(SearchAddress, SearchSize, BytesToFind, BytesToFindSize, NULL, PatchAddressModifier);
+	PatchAddress = BinSearch(SearchAddress, SearchSize, BytesToFind, BytesToFindSize, PatchAddressModifier01, NULL);
 	// Bytes not found!
 	if (PatchAddress == NULL) {
 		// Log message.

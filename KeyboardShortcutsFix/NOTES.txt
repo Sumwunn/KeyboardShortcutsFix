@@ -1,4 +1,4 @@
-Patching IDirectInputDevice8::SetCooperativeLevel's dwFlags seems to fix the issue of not being able to use the keyboard shortcuts. (volume keys, alt-f4, etc)
+Patching IDirectInputDevice8::SetCooperativeLevel's hwnd to pass NULL seems to fix the issue of not being able to use the keyboard shortcuts. (volume keys, alt-f4, etc)
 
 00007FF7BE317C50 | 48 89 5C 24 08           | MOV QWORD PTR SS:[RSP+8],RBX                                                  |
 00007FF7BE317C55 | 57                       | PUSH RDI                                                                      |
@@ -19,7 +19,7 @@ Patching IDirectInputDevice8::SetCooperativeLevel's dwFlags seems to fix the iss
 00007FF7BE317C94 | FF 15 AE 19 8C 00        | CALL QWORD PTR DS:[<&GetActiveWindow>]                                        |
 00007FF7BE317C9A | 48 8B 4F 70              | MOV RCX,QWORD PTR DS:[RDI+70]                                                 |
 00007FF7BE317C9E | 41 B8 15 00 00 00        | MOV R8D,15                                                                    | << dwFlags
-00007FF7BE317CA4 | 48 8B D0                 | MOV RDX,RAX                                                                   |
+00007FF7BE317CA4 | 48 8B D0                 | MOV RDX,RAX                                                                   | << hwnd << Patched to: XOR RDX, RDX. Fits nicely.
 00007FF7BE317CA7 | FF 53 68                 | CALL QWORD PTR DS:[RBX+68]                                                    | << IDirectInputDevice8::SetCooperativeLevel
 00007FF7BE317CAA | 48 8B 4F 70              | MOV RCX,QWORD PTR DS:[RDI+70]                                                 |
 00007FF7BE317CAE | 48 8D 15 EB 2A B1 00     | LEA RDX,QWORD PTR DS:[7FF7BEE2A7A0]                                           |
@@ -39,15 +39,3 @@ Patching IDirectInputDevice8::SetCooperativeLevel's dwFlags seems to fix the iss
 00007FF7BE317CF3 | 48 83 C4 40              | ADD RSP,40                                                                    |
 00007FF7BE317CF7 | 5F                       | POP RDI                                                                       |
 00007FF7BE317CF8 | C3                       | RET                                                                           |
-
-	// Old dwFlags before patching:
-	// DISCL_EXCLUSIVE
-	// DISCL_FOREGROUND
-	// DISCL_NOWINKEY
-	// Combined flags = 0x15
-
-	// New dwFlags after patching.
-	// DISCL_EXCLUSIVE
-	// DISCL_FOREGROUND
-	// DISCL_BACKGROUND
-	// Combined flags = 0x0D
