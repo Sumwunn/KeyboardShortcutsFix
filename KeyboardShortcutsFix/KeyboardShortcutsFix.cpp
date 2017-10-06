@@ -1,6 +1,6 @@
 /*                             The MIT License (MIT)
 
-Copyright (c) 2016 Sumwunn @ github.com
+Copyright (c) 2017 Sumwunn @ github.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -36,8 +36,8 @@ extern "C" int GetTextSectionSize(HMODULE Module, int DataType);
 // -1 = Process is NOT expected target.
 // -2 = Log file creation failed.
 
-extern "C" __declspec(dllexport) int Setup() {
-
+extern "C" __declspec(dllexport) int Setup(int ScriptExtenderType)
+{
 	LPCTSTR ExpectedProcess01 = L"SkyrimSE.exe";
 	// These bytes will land us exactly at where IDirectInputDevice8::SetCooperativeLevel's dwFlags is.
 	unsigned char BytesToFind01[] = { 0x41, 0xB8, 0x15, 0x00, 0x00, 0x00, 0x48, 0x8B, 0xD0, 0xFF, 0x53, 0x68 };
@@ -68,7 +68,8 @@ extern "C" __declspec(dllexport) int Setup() {
 	// Get module of target to writes hooks to.
 	// SkyrimSE.exe
 	HMODULE TargetModule = GetModuleHandle(ExpectedProcess01);
-	if (TargetModule != NULL) {
+	if (TargetModule != NULL) 
+	{
 		PatchAddressModifier = PatchAddressModifier01;
 		BytesToFind = BytesToFind01;
 		BytesPatch = BytesPatch01;
@@ -77,11 +78,15 @@ extern "C" __declspec(dllexport) int Setup() {
 	}
 
 	// Open up fresh log file.
-	std::ofstream LogFile;
-	LogFile.open("Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.log");
-	// Log file creation failed.
-	if (!LogFile) {
-		return -2;
+	std::ofstream LogFileHandle;
+	// Open up fresh log file.
+	if (ScriptExtenderType == 2) // SKSE64 path.
+	{
+		LogFileHandle.open(L"Data\\SKSE\\Plugins\\KeyboardShortcutsFix.log");
+	}
+	else // Dll loader path.
+	{
+		LogFileHandle.open(L"Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.log");
 	}
 
 	// Get size and address of ExpectedProcess's .text section.
@@ -91,24 +96,48 @@ extern "C" __declspec(dllexport) int Setup() {
 	// Get address and patch it.
 	PatchAddress = BinSearch(SearchAddress, SearchSize, BytesToFind, BytesToFindSize, PatchAddressModifier01, NULL);
 	// Bytes not found!
-	if (PatchAddress == NULL) {
+	if (PatchAddress == NULL) 
+	{
 		// Log message.
-		LogFile << "NO" << std::endl;
+		LogFileHandle << "NO" << std::endl;
 	}
 	// Bytes found!
-	else {
+	else 
+	{
 		// Patch it! (with NOPS)
 		VirtualProtect(PatchAddress, BytesPatchSize, PAGE_EXECUTE_READWRITE, &OldVP);
 		memcpy(PatchAddress, BytesPatch, BytesPatchSize);
 		VirtualProtect(PatchAddress, BytesPatchSize, OldVP, &OldVP);
 		// Log message.
-		LogFile << "YES" << std::endl;
+		LogFileHandle << "YES" << std::endl;
 		// Cleanup.
-		LogFile.close();
+		LogFileHandle.close();
 		return 1;
 	}
 
 	// Cleanup.
-	LogFile.close();
+	LogFileHandle.close();
 	return 0;
 }
+
+#ifdef _SKSE64_
+////// SKSE64 //////
+#include "common\IPrefix.h"
+#include "skse64\PluginAPI.h"
+
+extern "C" __declspec(dllexport) bool SKSEPlugin_Query(const SKSEInterface * skse, PluginInfo * info)
+{
+	info->infoVersion = PluginInfo::kInfoVersion;
+	info->name = "KeyboardShortcutsFix";
+	info->version = 1;
+
+	return TRUE;
+}
+
+extern "C" __declspec(dllexport) bool SKSEPlugin_Load(const SKSEInterface * skse)
+{
+	Setup(2);
+
+	return TRUE;
+}
+#endif
