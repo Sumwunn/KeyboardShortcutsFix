@@ -15,8 +15,21 @@ Alt-F4, volume keys, it just works!
 **How to uninstall**
 
 1. Uninstall via NMM or manually:
-- If using dll loader version, delete KeyboardShortcutsFix.dll & KeyboardShortcutsFix.dll_Exports.txt from Data\Plugins\Sumwunn.
-- If using SKSE64 version, delete KeyboardShortcutsFix.dll from Data\SKSE\Plugins.
+- If using dll loader version, delete KeyboardShortcutsFix.dll, KeyboardShortcutsFix.dll_Exports.txt & KeyboardShortcutsFix.ini from Data\Plugins\Sumwunn.
+- If using SKSE64 version, delete KeyboardShortcutsFix.dll & KeyboardShortcutsFix.ini from Data\SKSE\Plugins.
+
+**Options**:
+KeyboardShortcutsFix.ini located in Data\Plugins\Sumwunn contains these options:
+
+iEnableLogging=1
+; 0 = Disabled.
+; 1 = Enabled.
+iIgnoreExpectedProcessName=0
+; 0 = Expected process name detection enabled.
+; 1 = Ignore SkyrimSE.exe name detection. Allows mod to work regardless of EXE name.
+iPatchMethod=1
+; 1 = hwnd method.
+; 2 = dwFlags method.
 
 **How do I know if it's working?**
 
