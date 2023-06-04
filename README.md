@@ -9,7 +9,7 @@ Alt-F4, volume keys, it just works!
 
 1. Install my Dll Loader manually -OR- SKSE64.
 2. Install this mod via your mod manager.
-3. Refer to these images (1﻿, 2﻿) to make sure it's installed correctly.
+3. Refer to these images ([1](https://staticdelivery.nexusmods.com/mods/1704/images/3620/3620-1685904986-1236963600.jpeg), [2](https://staticdelivery.nexusmods.com/mods/1704/images/3620/3620-1685904986-1614642548.jpeg)) to make sure it's installed correctly.
 4. Play!
 
 **How to uninstall**
@@ -20,7 +20,7 @@ Alt-F4, volume keys, it just works!
 
 1. Install my Dll Loader manually -OR- SKSE64.
 2. Copy the Plugins & SKSE folder to Skyrim SE's Data folder (SKSE folder is only required if you are not using my dll loader).
-3. Refer to these images (1﻿, 2﻿) to make sure it's installed correctly.
+3. Refer to these images ([1](https://staticdelivery.nexusmods.com/mods/1704/images/3620/3620-1685904986-1236963600.jpeg), [2](https://staticdelivery.nexusmods.com/mods/1704/images/3620/3620-1685904986-1614642548.jpeg)) to make sure it's installed correctly.
 4. Play!
 
 **How to uninstall (MANUALLY)**
@@ -59,8 +59,9 @@ Probably not! I've designed this to be version independent.
 However in the case that it does, I will have it fixed very quickly.
 Below is a list of game versions that have been tested and working.
 
-**Skyrim SE tested & working versions w/ 1.0.0.1**
-
+**Skyrim SE tested & working versions w/ 1.0.0.3+**
+- 1.6.640.0
+- 1.5.97.0
 - 1.5.3.0.8
 - 1.4.2.0.8
 - 1.3.9.0.8
