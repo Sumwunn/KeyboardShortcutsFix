@@ -1,5 +1,10 @@
 ## [PC] Keyboard Shortcuts Fix - Skyrim SE/AE
 
+# WARNING !
+## This mod will allow Skyrim to process input from ***anywhere*** (incl. off-screen)!
+## Be *careful* while alt-tabbing.
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
 **What is this?**
 
 It's a plugin I made that enables keyboard shortcuts by patching SkyrimSE.exe during runtime. It's designed to be version independent.
