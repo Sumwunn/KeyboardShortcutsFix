@@ -1,6 +1,6 @@
 /*                             The MIT License (MIT)
 
-Copyright (c) 2017 Sumwunn @ github.com
+Copyright (c) 2023 Sumwunn @ github.com
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
@@ -34,15 +34,20 @@ extern "C" int GetTextSectionSize(HMODULE Module, int DataType);
 // C++
 int BinPatch(HMODULE hModule, unsigned char* BytesToFind, int BytesToFindSize, unsigned char* BytesPatch, int BytesPatchSize, int AddressModifierAdd, int AddressModifierSub);
 
+// - Data -
+// ScriptExtenderType
+// 0 = None
+// 1 = Fallout 4
+// 2 = Skyrim SE
+int ScriptExtenderType = 0;
+
 // Return values
 // 0 = Patching failed, bytes not found.
 // 1 = Patching successful, bytes found.
 // -1 = Process is NOT expected target.
 // -2 = Log file creation failed.
 
-extern "C" __declspec(dllexport) int Setup(int ScriptExtenderType)
-// ScriptExtenderType
-// 1 = (reserved). 2 = SKSE64.
+extern "C" __declspec(dllexport) int Setup()
 {
 	LPCTSTR ExpectedProcess01 = L"SkyrimSE.exe";
 	// These bytes will land us exactly at where IDirectInputDevice8::SetCooperativeLevel's is.
@@ -56,44 +61,21 @@ extern "C" __declspec(dllexport) int Setup(int ScriptExtenderType)
 	//////// Setup Part 1 - Config ////////
 
 	TCHAR ConfigFilePath[MAX_PATH];
-	int iEnableLogging = 1;
-	// 0 = Disable.
-	// 1 = Enable.
-	int iIgnoreExpectedProcessName = 0;
-	// 0 = Expected process name detection enabled.
-	// 1 = Ignore SkyrimSE.exe name detection. Allows mod to work regardless of EXE name.
+	bool bEnableLogging = true;
+	bool bIgnoreExpectedProcessName = false;
+	// false = Expected process name detection enabled.
+	// true = Ignore SkyrimSE.exe name detection. Allows mod to work regardless of EXE name.
 	int iPatchMethod = 1;
 	// 1 = hwnd.
 	// 2 = dwFlags.
 
 	// Get config path.
 	GetCurrentDirectory(MAX_PATH, ConfigFilePath);
-	if (ScriptExtenderType == 2) // SKSE64 path.
-	{
-		_tcscat_s(ConfigFilePath, MAX_PATH, L"\\Data\\SKSE\\Plugins\\KeyboardShortcutsFix.ini");
-	}
-	else // Dll loader path.
-	{
-		_tcscat_s(ConfigFilePath, MAX_PATH, L"\\Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.ini");
-	}
+	_tcscat_s(ConfigFilePath, MAX_PATH, L"\\Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.ini");
 	// Get config settings.
-	iEnableLogging = GetPrivateProfileInt(L"General", L"iEnableLogging", 1, ConfigFilePath);
-	iIgnoreExpectedProcessName = GetPrivateProfileInt(L"General", L"iIgnoreExpectedProcessName", 0, ConfigFilePath);
+	bEnableLogging = GetPrivateProfileInt(L"General", L"bEnableLogging", 1, ConfigFilePath);
+	bIgnoreExpectedProcessName = GetPrivateProfileInt(L"General", L"bIgnoreExpectedProcessName", 0, ConfigFilePath);
 	iPatchMethod = GetPrivateProfileInt(L"General", L"iPatchMethod", 1, ConfigFilePath);
-
-	// Checking for incorrect values.
-	if (iEnableLogging < 0 || iEnableLogging > 1)
-	{
-		iEnableLogging = 1;
-	}
-	if (iIgnoreExpectedProcessName < 0 || iIgnoreExpectedProcessName > 1)
-	{
-		iIgnoreExpectedProcessName = 0;
-	}
-	if (iPatchMethod < 0 || iPatchMethod > 2)
-	{
-		iPatchMethod = 1;
-	}
 
 	// Misc.
 	HMODULE hModule = NULL;
@@ -101,53 +83,40 @@ extern "C" __declspec(dllexport) int Setup(int ScriptExtenderType)
 
 	//////// Setup Part 2 - Addresses & Logging ////////
 
-	if (iEnableLogging == 1)
+	if (bEnableLogging)
 	{
-		// Open up fresh log file.
-		if (ScriptExtenderType == 2) // SKSE64 path.
-		{
-			LogFileHandle.open(L"Data\\SKSE\\Plugins\\KeyboardShortcutsFix.log");
-		}
-		else // Dll loader path.
-		{
-			LogFileHandle.open(L"Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.log");
-		}
+		// Open up fresh log file
+		LogFileHandle.open(L"Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.log");
 
 		// Log file creation failed.
 		if (!LogFileHandle)
-		{
 			return -2;
-		}
 	}
 
 	// Skyrim SE.
-	if (iIgnoreExpectedProcessName == 1)
+	if (bIgnoreExpectedProcessName)
 	{
 		hModule = GetModuleHandle(NULL);
 	}
 	else
-	{
 		hModule = GetModuleHandle(ExpectedProcess01);
-	}
+
 	// Did we get hModule?
 	if (hModule != NULL)
 	{
 		// Find bytes and patch them.
 		int PatchingResult = NULL;
 		// hwmd method.
-		if (iPatchMethod = 1) 
-		{
+		if (iPatchMethod == 1) 
 			PatchingResult = BinPatch(hModule, BytesToFind01_01, sizeof BytesToFind01_01, BytesPatch01_01, sizeof BytesPatch01_01, AddressModifierSub01_01, NULL);
-		}
 		// dwFlags method.
-		else if (iPatchMethod = 2)
-		{
+		else if (iPatchMethod == 2)
 			PatchingResult = BinPatch(hModule, BytesToFind01_01, sizeof BytesToFind01_01, BytesPatch01_02, sizeof BytesPatch01_02, NULL, NULL);
-		}
+
 		// Compare patching result and write result into log file.
 		if (PatchingResult == 0)
 		{
-			if (iEnableLogging == 1)
+			if (bEnableLogging)
 			{
 				// Bytes not found!
 				// Log message.
@@ -155,11 +124,12 @@ extern "C" __declspec(dllexport) int Setup(int ScriptExtenderType)
 				// Cleanup.
 				LogFileHandle.close();
 			}
+
 			return 0;
 		}
 		else
 		{
-			if (iEnableLogging == 1)
+			if (bEnableLogging)
 			{
 				// Bytes found!
 				// Log message.
@@ -167,11 +137,12 @@ extern "C" __declspec(dllexport) int Setup(int ScriptExtenderType)
 				// Cleanup.
 				LogFileHandle.close();
 			}
+
 			return 1;
 		}
 	}
 
-	if (iEnableLogging == 1)
+	if (bEnableLogging)
 	{
 		// Process not found.
 		// Cleanup.
@@ -179,6 +150,7 @@ extern "C" __declspec(dllexport) int Setup(int ScriptExtenderType)
 		LogFileHandle << "SkyrimSE.exe not detected." << std::endl;
 		LogFileHandle.close();
 	}
+
 	return -1;
 }
 
@@ -198,11 +170,9 @@ int BinPatch(HMODULE hModule, unsigned char* BytesToFind, int BytesToFindSize, u
 	SearchAddress = GetTextSectionAddr(hModule, 2);
 	// Get address and patch it.
 	PatchAddress = BinSearch(SearchAddress, SearchSize, BytesToFind, BytesToFindSize, AddressModifierAdd, AddressModifierSub);
+	// Bytes not found.
 	if (PatchAddress == NULL)
-	{
-		// Bytes not found.
 		return 0;
-	}
 	// Bytes found!
 	else
 	{
@@ -216,24 +186,20 @@ int BinPatch(HMODULE hModule, unsigned char* BytesToFind, int BytesToFindSize, u
 	return 0;
 }
 
-#ifdef _SKSE64_
-////// SKSE64 //////
-#include "common\IPrefix.h"
-#include "skse64\PluginAPI.h"
+////// Script Extender //////
 
-extern "C" __declspec(dllexport) bool SKSEPlugin_Query(const SKSEInterface * skse, PluginInfo * info)
+/*
+extern "C" __declspec(dllexport) void SetF4SEMode()
 {
-	info->infoVersion = PluginInfo::kInfoVersion;
-	info->name = "KeyboardShortcutsFix";
-	info->version = 1;
+	ScriptExtenderType = 1;
 
-	return TRUE;
+	return;
 }
+*/
 
-extern "C" __declspec(dllexport) bool SKSEPlugin_Load(const SKSEInterface * skse)
+extern "C" __declspec(dllexport) void SetSKSEMode()
 {
-	Setup(2);
+	ScriptExtenderType = 2;
 
-	return TRUE;
+	return;
 }
-#endif

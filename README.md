@@ -1,22 +1,36 @@
-## [PC] Keyboard Shortcuts Fix - Skyrim SE
+## [PC] Keyboard Shortcuts Fix - Skyrim SE/AE
 
 **What is this?**
 
-It's a plugin I made that enables keyboard shortcuts by patching SkyrimSE.exe during runtime. It's designed to be version independent. 
+It's a plugin I made that enables keyboard shortcuts by patching SkyrimSE.exe during runtime. It's designed to be version independent.
 Alt-F4, volume keys, it just works!
 
 **How to install**
 
 1. Install my Dll Loader manually -OR- SKSE64.
-2. If using the dll loader version: copy the plugin folder to Skyrim SE's Data folder.
-3. If using the SKSE64 version: copy the SKSE folder to Skyrim SE's Data folder.
-3. Play!
+2. Install this mod via your mod manager.
+3. Refer to these images (1﻿, 2﻿) to make sure it's installed correctly.
+4. Play!
 
 **How to uninstall**
 
-1. Uninstall via NMM or manually:
-- If using dll loader version, delete KeyboardShortcutsFix.dll, KeyboardShortcutsFix.dll_Exports.txt & KeyboardShortcutsFix.ini from Data\Plugins\Sumwunn.
-- If using SKSE64 version, delete KeyboardShortcutsFix.dll & KeyboardShortcutsFix.ini from Data\SKSE\Plugins.
+1. Uninstall via your mod manager.
+
+**How to install (MANUALLY)**
+
+1. Install my Dll Loader manually -OR- SKSE64.
+2. Copy the Plugins & SKSE folder to Skyrim SE's Data folder (SKSE folder is only required if you are not using my dll loader).
+3. Refer to these images (1﻿, 2﻿) to make sure it's installed correctly.
+4. Play!
+
+**How to uninstall (MANUALLY)**
+
+1. Delete:
+    ﻿Data\Plugins\KeyboardShortcutsFix.dll
+    ﻿Data\Plugins\KeyboardShortcutsFix.ini
+    ﻿Data\Plugins\KeyboardShortcutsFix.dll_Exports.txt
+    ﻿Data\Plugins\KeyboardShortcutsFix.log (if present)
+    ﻿Data\SKSE\Plugins\KeyboardShortcutsFixLoader.dll
 
 **Options**:
 KeyboardShortcutsFix.ini located in Data\Plugins\Sumwunn contains these options:
