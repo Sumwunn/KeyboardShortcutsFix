@@ -26,11 +26,11 @@ Alt-F4, volume keys, it just works!
 **How to uninstall (MANUALLY)**
 
 1. Delete:
-    ﻿Data\Plugins\KeyboardShortcutsFix.dll
-    ﻿Data\Plugins\KeyboardShortcutsFix.ini
-    ﻿Data\Plugins\KeyboardShortcutsFix.dll_Exports.txt
-    ﻿Data\Plugins\KeyboardShortcutsFix.log (if present)
-    ﻿Data\SKSE\Plugins\KeyboardShortcutsFixLoader.dll
+- Data\Plugins\KeyboardShortcutsFix.dll
+- Data\Plugins\KeyboardShortcutsFix.ini
+- Data\Plugins\KeyboardShortcutsFix.dll_Exports.txt
+- Data\Plugins\KeyboardShortcutsFix.log (if present)
+- Data\SKSE\Plugins\KeyboardShortcutsFixLoader.dll
 
 **Options**:
 KeyboardShortcutsFix.ini located in Data\Plugins\Sumwunn contains these options:
