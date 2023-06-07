@@ -193,7 +193,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <UASM Include="Misc.asm">
+    <UASM Include="Utils.asm">
       <FileType>Document</FileType>
     </UASM>
   </ItemGroup>

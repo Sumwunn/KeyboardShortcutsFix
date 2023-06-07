@@ -51,8 +51,8 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <UASM Include="Misc.asm">
-      <Filter>Source Files</Filter>
+    <UASM Include="Utils.asm">
+      <Filter>Source Files\ASM</Filter>
     </UASM>
   </ItemGroup>
 </Project>

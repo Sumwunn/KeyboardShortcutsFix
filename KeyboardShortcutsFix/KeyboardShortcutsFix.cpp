@@ -25,10 +25,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.*/
 #include <iostream>
 #include <string>
 
-// Defined functions.
+// Defined functions
 // ASM
 extern "C" void* BinSearch(void* Search, int SearchLength, unsigned char* Bytes, int BytesLength, int AddMod, int SubMod);
-// Work around because my ASM function GetTextSectionData has multiple return value data types.
+// Work around because my ASM function GetTextSectionData has multiple return value data types
 extern "C" void* GetTextSectionAddr(HMODULE Module, int DataType);
 extern "C" int GetTextSectionSize(HMODULE Module, int DataType);
 // C++
@@ -42,42 +42,35 @@ int BinPatch(HMODULE hModule, unsigned char* BytesToFind, int BytesToFindSize, u
 int ScriptExtenderType = 0;
 
 // Return values
-// 0 = Patching failed, bytes not found.
-// 1 = Patching successful, bytes found.
-// -1 = Process is NOT expected target.
-// -2 = Log file creation failed.
+// 0 = Patching failed, bytes not found
+// 1 = Patching successful, bytes found
+// -1 = Process is NOT expected target
+// -2 = Log file creation failed
 
 extern "C" __declspec(dllexport) int Setup()
 {
 	LPCTSTR ExpectedProcess01 = L"SkyrimSE.exe";
-	// These bytes will land us exactly at where IDirectInputDevice8::SetCooperativeLevel's is.
-	unsigned char BytesToFind01_01[] = { 0x41, 0xB8, 0x15, 0x00, 0x00, 0x00, 0x48, 0x8B, 0xD0, 0xFF, 0x53, 0x68 };
-	// This is what we patch it with (check notes.txt).
-	unsigned char BytesPatch01_01[] = { 0x48, 0x31, 0xD2 }; // hwnd.
-	unsigned char BytesPatch01_02[] = { 0x41, 0xB8, 0x0D }; // dwFlags.
-	// We need to go back X bytes so we land at the right address.
-	int AddressModifierSub01_01 = 0x6; // hwnd.
+	// These bytes will land us exactly at where IDirectInputDevice8::SetCooperativeLevel's is
+	unsigned char BytesToFind01[] = { 0x41, 0xB8, 0x15, 0x00, 0x00, 0x00, 0x48, 0x8B, 0xD0, 0xFF, 0x53, 0x68 };
+	// This is what we patch it with (check notes.txt)
+	unsigned char BytesPatch01[] = { 0x41, 0xB8, 0x06 }; // dwFlags
 
 	//////// Setup Part 1 - Config ////////
 
 	TCHAR ConfigFilePath[MAX_PATH];
 	bool bEnableLogging = true;
 	bool bIgnoreExpectedProcessName = false;
-	// false = Expected process name detection enabled.
-	// true = Ignore SkyrimSE.exe name detection. Allows mod to work regardless of EXE name.
-	int iPatchMethod = 1;
-	// 1 = hwnd.
-	// 2 = dwFlags.
+	// false = Expected process name detection enabled
+	// true = Ignore SkyrimSE.exe name detection; allows mod to work regardless of EXE name
 
-	// Get config path.
+	// Get config path
 	GetCurrentDirectory(MAX_PATH, ConfigFilePath);
 	_tcscat_s(ConfigFilePath, MAX_PATH, L"\\Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.ini");
-	// Get config settings.
+	// Get config settings
 	bEnableLogging = GetPrivateProfileInt(L"General", L"bEnableLogging", 1, ConfigFilePath);
 	bIgnoreExpectedProcessName = GetPrivateProfileInt(L"General", L"bIgnoreExpectedProcessName", 0, ConfigFilePath);
-	iPatchMethod = GetPrivateProfileInt(L"General", L"iPatchMethod", 1, ConfigFilePath);
 
-	// Misc.
+	// Misc
 	HMODULE hModule = NULL;
 	std::ofstream LogFileHandle;
 
@@ -88,12 +81,12 @@ extern "C" __declspec(dllexport) int Setup()
 		// Open up fresh log file
 		LogFileHandle.open(L"Data\\Plugins\\Sumwunn\\KeyboardShortcutsFix.log");
 
-		// Log file creation failed.
+		// Log file creation failed
 		if (!LogFileHandle)
 			return -2;
 	}
 
-	// Skyrim SE.
+	// Skyrim SE
 	if (bIgnoreExpectedProcessName)
 	{
 		hModule = GetModuleHandle(NULL);
@@ -104,24 +97,20 @@ extern "C" __declspec(dllexport) int Setup()
 	// Did we get hModule?
 	if (hModule != NULL)
 	{
-		// Find bytes and patch them.
-		int PatchingResult = NULL;
-		// hwmd method.
-		if (iPatchMethod == 1) 
-			PatchingResult = BinPatch(hModule, BytesToFind01_01, sizeof BytesToFind01_01, BytesPatch01_01, sizeof BytesPatch01_01, AddressModifierSub01_01, NULL);
-		// dwFlags method.
-		else if (iPatchMethod == 2)
-			PatchingResult = BinPatch(hModule, BytesToFind01_01, sizeof BytesToFind01_01, BytesPatch01_02, sizeof BytesPatch01_02, NULL, NULL);
+		// Find bytes and patch them
+		bool patchResult;
+		// dwFlags method
+		patchResult = BinPatch(hModule, BytesToFind01, sizeof BytesToFind01, BytesPatch01, sizeof BytesPatch01, NULL, NULL);
 
-		// Compare patching result and write result into log file.
-		if (PatchingResult == 0)
+		// Compare patching result and write result into log file
+		if (!patchResult)
 		{
 			if (bEnableLogging)
 			{
 				// Bytes not found!
-				// Log message.
+				// Log message
 				LogFileHandle << "NO" << std::endl;
-				// Cleanup.
+				// Cleanup
 				LogFileHandle.close();
 			}
 
@@ -132,9 +121,9 @@ extern "C" __declspec(dllexport) int Setup()
 			if (bEnableLogging)
 			{
 				// Bytes found!
-				// Log message.
+				// Log message
 				LogFileHandle << "YES" << std::endl;
-				// Cleanup.
+				// Cleanup
 				LogFileHandle.close();
 			}
 
@@ -144,9 +133,9 @@ extern "C" __declspec(dllexport) int Setup()
 
 	if (bEnableLogging)
 	{
-		// Process not found.
-		// Cleanup.
-		// Log message.
+		// Process not found
+		// Cleanup
+		// Log message
 		LogFileHandle << "SkyrimSE.exe not detected." << std::endl;
 		LogFileHandle.close();
 	}
@@ -156,21 +145,22 @@ extern "C" __declspec(dllexport) int Setup()
 
 int BinPatch(HMODULE hModule, unsigned char* BytesToFind, int BytesToFindSize, unsigned char* BytesPatch, int BytesPatchSize, int AddressModifierAdd, int AddressModifierSub) // BinSearch + MEMCPY patching.
 {
-	// The address we get from GetTextSectionAddr.
+	// The address we get from GetTextSectionAddr
 	void* SearchAddress = (void*)NULL;
-	// The size too.
+	// The size too
 	int SearchSize = NULL;
-	// The address we get from BinSearch.
+	// The address we get from BinSearch
 	void* PatchAddress = (void*)NULL;
-	// Misc.
+	// Misc
 	DWORD lpflOldProtect = NULL;
 
-	// Get size and address of ExpectedProcess's .text section.
+	// Get size and address of ExpectedProcess's .text section
 	SearchSize = GetTextSectionSize(hModule, 1);
 	SearchAddress = GetTextSectionAddr(hModule, 2);
-	// Get address and patch it.
+	// Get address and patch it
 	PatchAddress = BinSearch(SearchAddress, SearchSize, BytesToFind, BytesToFindSize, AddressModifierAdd, AddressModifierSub);
-	// Bytes not found.
+
+	// Bytes not found
 	if (PatchAddress == NULL)
 		return 0;
 	// Bytes found!
@@ -180,6 +170,7 @@ int BinPatch(HMODULE hModule, unsigned char* BytesToFind, int BytesToFindSize, u
 		VirtualProtect(PatchAddress, BytesPatchSize, PAGE_EXECUTE_READWRITE, &lpflOldProtect);
 		memcpy(PatchAddress, BytesPatch, BytesPatchSize);
 		VirtualProtect(PatchAddress, BytesPatchSize, lpflOldProtect, &lpflOldProtect);
+
 		return 1;
 	}
 

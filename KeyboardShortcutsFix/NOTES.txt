@@ -1,3 +1,5 @@
+See post for correct flags: https://forum.nexusmods.com/index.php?showtopic=5044150/#entry121329390
+
 Patching IDirectInputDevice8::SetCooperativeLevel's hwnd to pass NULL seems to fix the issue of not being able to use the keyboard shortcuts. (volume keys, alt-f4, etc)
 
 00007FF7BE317C50 | 48 89 5C 24 08           | MOV QWORD PTR SS:[RSP+8],RBX                                                  |
