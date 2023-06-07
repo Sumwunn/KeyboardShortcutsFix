@@ -45,7 +45,7 @@ KeyboardShortcutsFix.ini located in Data\Plugins\Sumwunn contains these options:
 - 1 = Enabled
 - iIgnoreExpectedProcessName=0
 - 0 = Expected process name detection enabled
-- 1 = Ignore SkyrimSE.exe name detection. Allows mod to work regardless of EXE name
+- 1 = Ignore SkyrimSE.exe name detection; allows mod to work regardless of EXE name
 
 **How do I know if it's working?**
 
@@ -91,6 +91,6 @@ http://www.nexusmods.com/skyrimspecialedition/mods/3620
 **CREDITS**
 
 - LePhilanthrope @ NexusMods for solving the keyboard keys being processed off-screen issue
-- Bethesda for Skyrim SE. (http://store.steampowered.com/app/489830/)
-- Microsoft for Visual Studio. (https://www.visualstudio.com/)
-- The UASM devs. (https://github.com/Terraspace/UASM)
+- Bethesda for Skyrim SE (http://store.steampowered.com/app/489830/)
+- Microsoft for Visual Studio (https://www.visualstudio.com/)
+- The UASM devs (https://github.com/Terraspace/UASM)
