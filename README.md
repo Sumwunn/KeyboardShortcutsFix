@@ -75,7 +75,7 @@ Below is a list of game versions that have been tested and working.
 
 **Discussion**: 
 
-http://www.nexusmods.com/skyrimspecialedition/mods/3620/?
+http://www.nexusmods.com/skyrimspecialedition/mods/3620
 
 **Compile Notes**
 
