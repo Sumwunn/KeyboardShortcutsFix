@@ -1,14 +1,14 @@
 ## [PC] Keyboard Shortcuts Fix - Skyrim SE/AE
 
-# WARNING !
-## This mod will allow Skyrim to process input from ***anywhere*** (incl. off-screen)!
-## Be *careful* while alt-tabbing.
+# Good News!
+## The issue with this mod causing Skyrim to process off-screen keyboard keys have been resolved!
+## A very big thanks to LePhilanthrope @ NexusMods for finding the issue (my patch was incorrect)!
 --------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 **What is this?**
 
 It's a plugin I made that enables keyboard shortcuts by patching SkyrimSE.exe during runtime. It's designed to be version independent.
-Alt-F4, volume keys, it just works!
+Alt-F4, volume keys - it just works!
 
 **How to install**
 
@@ -41,14 +41,11 @@ Alt-F4, volume keys, it just works!
 KeyboardShortcutsFix.ini located in Data\Plugins\Sumwunn contains these options:
 
 - iEnableLogging=1
-- 0 = Disabled.
-- 1 = Enabled.
+- 0 = Disabled
+- 1 = Enabled
 - iIgnoreExpectedProcessName=0
-- 0 = Expected process name detection enabled.
-- 1 = Ignore SkyrimSE.exe name detection. Allows mod to work regardless of EXE name.
-- iPatchMethod=1
-- 1 = hwnd method.
-- 2 = dwFlags method.
+- 0 = Expected process name detection enabled
+- 1 = Ignore SkyrimSE.exe name detection. Allows mod to work regardless of EXE name
 
 **How do I know if it's working?**
 
@@ -94,10 +91,8 @@ http://www.nexusmods.com/skyrimspecialedition/mods/245/?
 
 **CREDITS**
 
+LePhilanthrope @ NexusMods for solving the keyboard keys being processed off-screen issue
 Bethesda for Fallout 4. (https://store.steampowered.com/app/377160/)
-
 Bethesda for Skyrim SE. (http://store.steampowered.com/app/489830/)
-
 Microsoft for Visual Studio. (https://www.visualstudio.com/)
-
 The UASM devs. (https://github.com/Terraspace/UASM)
