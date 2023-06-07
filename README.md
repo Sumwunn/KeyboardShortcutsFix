@@ -90,8 +90,7 @@ http://www.nexusmods.com/skyrimspecialedition/mods/3620
 
 **CREDITS**
 
-LePhilanthrope @ NexusMods for solving the keyboard keys being processed off-screen issue
-Bethesda for Fallout 4. (https://store.steampowered.com/app/377160/)
-Bethesda for Skyrim SE. (http://store.steampowered.com/app/489830/)
-Microsoft for Visual Studio. (https://www.visualstudio.com/)
-The UASM devs. (https://github.com/Terraspace/UASM)
+- LePhilanthrope @ NexusMods for solving the keyboard keys being processed off-screen issue
+- Bethesda for Skyrim SE. (http://store.steampowered.com/app/489830/)
+- Microsoft for Visual Studio. (https://www.visualstudio.com/)
+- The UASM devs. (https://github.com/Terraspace/UASM)
