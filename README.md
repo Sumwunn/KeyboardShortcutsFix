@@ -49,16 +49,15 @@ KeyboardShortcutsFix.ini located in Data\Plugins\Sumwunn contains these options:
 
 **How do I know if it's working?**
 
-Try some keyboard shortcuts! Alternatively you can check the log file.
+Try some keyboard shortcuts! Alternatively, you can check the log file.
 
-After you've started Skyrim SE (you can alt-tab for this part), go to Data\Plugins\Sumwunn (for SKSE64: Data\SKSE\Plugins), there's a log file called: KeyboardShortcutsFix.log. 
+After you've started Skyrim SE (you can alt-tab for this part), go to Data\Plugins\Sumwunn, there's a log file called: KeyboardShortcutsFix.log. 
 
-It will either say "YES" or "NO". Indicating whether or not the plugin successfully patched Skyrim SE. So if it says NO, lemme know!
+It will either say "YES" or "NO", indicating whether or not the plugin successfully patched Skyrim SE. If it says NO, lemme know!
 
 **Will it need updating?**
 
-Probably not! I've designed this to be version independent.
-However in the case that it does, I will have it fixed very quickly.
+Probably not! I've designed this to be version independent; however, in the case that it does, I will try to fix it quickly.
 Below is a list of game versions that have been tested and working.
 
 **Skyrim SE tested & working versions w/ 1.0.0.3+**
